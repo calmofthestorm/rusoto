@@ -56,6 +56,15 @@ impl ByteStream {
     }
 }
 
+impl From<Bytes> for ByteStream {
+    fn from(buf: Bytes) -> ByteStream {
+        ByteStream {
+            size_hint: Some(buf.len()),
+            inner: Box::pin(stream::once(async move { Ok(buf) })),
+        }
+    }
+}
+
 impl From<Vec<u8>> for ByteStream {
     fn from(buf: Vec<u8>) -> ByteStream {
         ByteStream {
